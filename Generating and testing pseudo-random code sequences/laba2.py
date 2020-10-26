@@ -127,11 +127,15 @@ def cor_test():
     #print(f'Модульное значение (8):{R_mod}')
 
 shifrotext_list_list=[]
+shifrotext_list_str=[]
+shifrotext_list_str_ascii=[]
+shifrotext_list_str_text=[]
 message_binary_list_key=[]
 message_binary_list=[]
 message_binary_list_str_key=[]
+shifrotext_list_str_ascii=[]
 input_file_txt = (open('File/text.txt','r',encoding='utf-8'))
-input_file_txt_shifrotext =(open('File/shifrotext.txt','w+',encoding='utf-8'))
+input_file_txt_shifrotext =(open('File/shifrotext_ascii.txt','w+',encoding='utf-8'))
 message=str(input_file_txt.read())
 message_ascii=[ord(i) for i in message]
 message_binary=[format(i,'b') for i in message_ascii]
@@ -140,37 +144,51 @@ len_message_binary = len(message_binary) * 7 - q_space
 key = key_generation(len_message_binary)
 serial_test_2(key)
 cor_test()
+input_file_txt_bin = (open('File/text_bin.txt','w+',encoding='utf-8'))
+input_file_txt_shifr_bin=(open('File/shifr_bin.txt','w+',encoding='utf-8'))
 
 z = 0
 for i in range(len(message_binary)):
     message_binary_list_key.append(list(message_binary[i]))
     message_binary_list.append(list(message_binary[i]))
+    shifrotext_list_list.append(list(message_binary[i]))
+
 for i in range(len(message_binary)):
-    for j in range(len(message_binary[i])):
+    for j in range(len(message_binary[i])):#заполнение списка со списками ключом
         message_binary_list_key[i][j]=key[z]
         z+=1
-z = 0
+        
 for i in range(len(message_binary)):
     message_binary_list_str_key.append("".join(message_binary_list_key[i]))
 
 for i in range(len(message_binary)):
     for j in range(len(message_binary[i])):
-        shifrotext_list_list.append(int(message_binary_list_key[i][j])^int(message_binary_list[i][j]))
+        shifrotext_list_list[i][j]=(str(int(message_binary_list_key[i][j])^int(message_binary_list[i][j])))
 
-print(message_binary_list_str_key[1])
-print(message_binary[1])
-print(shifrotext_list_list)
+for i in range(len(message_binary)):
+    shifrotext_list_str.append("".join(shifrotext_list_list[i]))#шифротекст список, а внутри строки
+
+#print(message_binary_list_str_key[1])# cписок, а внутри ключ(строка)
+#print(message_binary[1])# список, а внути строка
+#print(shifrotext_list_str[1])# список, авнутри строка
+
+for i in range(len(message_binary)):#перевод символов в десятичный код
+    shifrotext_list_str_ascii.append(int(shifrotext_list_str[i], base=2))
+
+for i in range(len(message_binary)):
+    shifrotext_list_str_text.append(str(shifrotext_list_str_ascii[i]))
+
+shifro_str_ascii=("".join(shifrotext_list_str_text))
+input_file_txt_shifrotext.write(str(shifro_str_ascii))
+
+input_file_txt_bin.write(''.join(message_binary))
+input_file_txt_shifr_bin.write(''.join(shifrotext_list_str))
+#print(shifrotext_list_str_text[0])
 #a=input("Введите двоичное целое число =")   
 #print("Двоичное целое число",a,"соответствует десятичному числу ", bin_to_dec(a))
 #for i in range (len(message_binary))
-#
-#str(input_file_txt_shifrotext.write())
+
+input_file_txt_bin.close()
+input_file_txt_shifr_bin.close()
+input_file_txt_shifrotext.close()
 input_file_txt.close()
-
-
-
-
-
-
-
-
