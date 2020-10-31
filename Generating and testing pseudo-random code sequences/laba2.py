@@ -80,18 +80,18 @@ def serial_test_2(key):
         elif i == "11":
             x4+=1
             
-    N_E.append(x1/(len(key_list_serial)))
-    N_E.append(x2/(len(key_list_serial)))
-    N_E.append(x3/(len(key_list_serial)))
-    N_E.append(x4/(len(key_list_serial)))
+    N_E.append(x1)
+    N_E.append(x2)
+    N_E.append(x3)
+    N_E.append(x4)
     
     n=4 #объявление переменной 2^k
     for i in range(n):
-        N_T.append(0.25)
+        N_T.append(len(key_list_serial)/4)
     X_2=0
     for i in range(n):
         X_2+=((N_E[i]-N_T[i])**2)/N_T[i]
-    #print(X_2)
+    print(X_2)
     #print(f"Серии по 2 бит ключа:{key_list_serial}")
    # print(f"Вероятности появления из сформированной выборки:{N_E}")
    # print(f"Вероятности появления теоретическая:{N_T}")
@@ -100,9 +100,9 @@ def serial_test_2(key):
 def cor_test():
     sum_key = 0
     sum_key_1 = 0
-    input_file_key = (open('File/key.txt','r',encoding='utf-8'))
-    key = str(input_file_key.read())
-    key_1= key[-10:-1]+key[9:]
+    input_file_key = (open('File/shifr_bin.txt','r',encoding='utf-8'))
+    key = input_file_key.read()
+    key_1= str(key[-1]+key[:(len(key)-1)])
     input_file_key.close()
     
     for i in range(len(key)):
@@ -115,16 +115,16 @@ def cor_test():
     low_sum_2=0
     
     for i in range(len(key)):
-        top_sum_1+=int(key[i])*int(key_1[i])
+        top_sum_1+=(int(key[i])*int(key_1[i]))
     for i in range(len(key)):
-        low_sum_1+=int(key[i])**2
+        low_sum_1+=(int(key[i])**2)
     for i in range(len(key)):
-        low_sum_2+=int(key_1[i])**2  
+        low_sum_2+=(int(key_1[i])**2) 
         
-    R= (len(key)*top_sum_1 - (sum_key*sum_key_1))/pow(((len(key)*low_sum_1 - sum_key**2)*(len(key)*low_sum_2 - sum_key_1**2)) ,0.5)
+    R= ((len(key)*top_sum_1) - (sum_key*sum_key_1))/pow(((len(key)*low_sum_1 - sum_key**2)*((len(key)*low_sum_2) - sum_key_1**2)), 0.5)
     R_mod =(1/(len(key)-1))+(2/(len(key)-2))*pow(((len(key))*((len(key))-3))/(len(key)+1) , 0.5)
-    #print(f'Коэффициент автокорреляции при k=1:{R}')
-    #print(f'Модульное значение (8):{R_mod}')
+    print(f'Коэффициент автокорреляции при k=1:{R}')
+    print(f'Модульное значение (8):{R_mod}')
 
 shifrotext_list_list=[]
 shifrotext_list_str=[]
@@ -142,7 +142,6 @@ message_binary=[format(i,'b') for i in message_ascii]
 q_space = space_message(message_binary)
 len_message_binary = len(message_binary) * 7 - q_space
 key = key_generation(len_message_binary)
-serial_test_2(key)
 cor_test()
 input_file_txt_bin = (open('File/text_bin.txt','w+',encoding='utf-8'))
 input_file_txt_shifr_bin=(open('File/shifr_bin.txt','w+',encoding='utf-8'))
@@ -187,7 +186,9 @@ input_file_txt_shifr_bin.write(''.join(shifrotext_list_str))
 #a=input("Введите двоичное целое число =")   
 #print("Двоичное целое число",a,"соответствует десятичному числу ", bin_to_dec(a))
 #for i in range (len(message_binary))
-
+#serial_test_2(key)
+#serial_test_2((''.join(message_binary)))
+#serial_test_2((''.join(shifrotext_list_str)))
 input_file_txt_bin.close()
 input_file_txt_shifr_bin.close()
 input_file_txt_shifrotext.close()
